@@ -1,0 +1,35 @@
+TARGET {
+  output: "System behavior explanation based on observed schema and patterns"
+  lang: JSON
+  profile: data
+}
+
+RUNTIME_INPUTS {
+  | name             | type   | description                                   |
+  |------------------|--------|-----------------------------------------------|
+  | schema_snapshot  | object | Full schema with table/column classifications |
+  | patterns         | array  | Learned behavioral patterns                   |
+  | observation_count| number | Total observations recorded                   |
+}
+
+BEHAVIOR ExplainSystem {
+  Describe how the database system works based on schema analysis and observed patterns.
+  Explain table purposes, relationships, data flows, and workflows.
+  Flag what you're confident about and what you're still unsure of.
+}
+
+CONSTRAINT {
+  MUST ground explanations in schema evidence
+  MUST cite learned patterns where relevant
+  MUST flag low-confidence claims explicitly
+  MUST describe relationships between tables
+}
+
+FORMAT {
+  OUTPUT: {
+    "overview": "<1-2 paragraph system description>",
+    "tables": [{ "name": "<table>", "role": "<what it does>" }],
+    "workflows": ["<observed workflow 1>", "<observed workflow 2>"],
+    "unknowns": ["<what is still unclear>"]
+  }
+}

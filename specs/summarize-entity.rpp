@@ -1,0 +1,36 @@
+TARGET {
+  output: "Natural language summary of an entity from a bespoke database"
+  lang: JSON
+  profile: data
+}
+
+RUNTIME_INPUTS {
+  | name           | type   | description                                     |
+  |----------------|--------|-------------------------------------------------|
+  | entity_data    | array  | All records related to this entity across tables |
+  | schema_context | string | Schema understanding with column meanings        |
+  | entity_type    | string | What kind of entity this is                     |
+  | patterns       | string | Relevant learned patterns from memory            |
+}
+
+BEHAVIOR SummarizeEntity {
+  Produce a concise business-language summary of an entity.
+  Reference actual field values from entity_data — do not fabricate.
+  Include relevant patterns the agent has learned about this entity.
+  Flag anything unusual compared to learned patterns.
+}
+
+CONSTRAINT {
+  MUST reference actual values from entity_data
+  MUST NOT fabricate any facts
+  MUST flag anomalies compared to learned patterns
+  MUST be concise — under 300 words
+}
+
+FORMAT {
+  OUTPUT: {
+    "summary": "<natural language summary>",
+    "key_facts": ["<fact 1>", "<fact 2>"],
+    "anomalies": ["<any unusual findings>"]
+  }
+}

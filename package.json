@@ -1,0 +1,41 @@
+{
+  "name": "runcor-integration",
+  "version": "0.1.0",
+  "description": "Integration agent for the runcor AI runtime — bridges bespoke systems",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=20.6.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "tsx tests/test-database.ts",
+    "test:schema": "tsx --env-file=.env tests/test-schema-discovery.ts",
+    "test:connector": "tsx tests/test-connectors.ts"
+  },
+  "keywords": ["runcor", "integration", "ai", "agents", "database"],
+  "license": "MIT",
+  "author": "runcor <hello@runcor.ai>",
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "runcor-memory": "github:runcor-ai/runcor-memory"
+  },
+  "peerDependencies": {
+    "runcor": "github:runcor-ai/runcor",
+    "pg": "^8.0.0",
+    "mysql2": "^3.0.0",
+    "tedious": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "pg": { "optional": true },
+    "mysql2": { "optional": true },
+    "tedious": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.3.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,46 @@
+TARGET {
+  output: "Detected behavioral pattern from database observations"
+  lang: JSON
+  profile: data
+}
+
+RUNTIME_INPUTS {
+  | name          | type   | description                                      |
+  |---------------|--------|--------------------------------------------------|
+  | observations  | array  | Recent observation events (table, change type, data) |
+  | schema_context| string | Current schema understanding                     |
+  | time_range    | string | Period covered by these observations             |
+}
+
+BEHAVIOR DetectPattern {
+  You are identifying recurring behavioral patterns in a database system.
+
+  Look for:
+  - Temporal patterns: "inserts happen between 9am-5pm", "batch updates every hour"
+  - Sequential patterns: "status goes 1→2→3→4→5", "insert in A followed by insert in B"
+  - Volume patterns: "~50 inserts per day in orders", "deletions spike on Mondays"
+  - Correlation patterns: "when X changes in table A, Y appears in table B"
+
+  MUST cite specific evidence — observation counts, timestamps, values.
+  MUST quantify frequency where possible.
+  MUST state confidence level.
+}
+
+CONSTRAINT {
+  MUST cite specific evidence from observations
+  MUST quantify frequency or timing
+  MUST NOT state patterns based on fewer than 3 observations
+}
+
+FORMAT {
+  OUTPUT: {
+    "patterns": [
+      {
+        "description": "<pattern in plain language>",
+        "confidence": <number>,
+        "evidence": "<specific observations that support this>",
+        "frequency": "<how often this occurs>"
+      }
+    ]
+  }
+}

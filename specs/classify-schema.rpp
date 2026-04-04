@@ -1,0 +1,79 @@
+TARGET {
+  output: "Table and column classification for a database schema"
+  lang: JSON
+  profile: data
+}
+
+TOKENS {
+  minConfidence: 0.3
+}
+
+RUNTIME_INPUTS {
+  | name          | type   | description                                 |
+  |---------------|--------|---------------------------------------------|
+  | table_name    | string | Name of the table to classify               |
+  | columns       | array  | Column definitions (name, type, nullable, pk)|
+  | foreign_keys  | array  | Foreign key relationships                    |
+  | sample_rows   | array  | Sample data rows from the table              |
+}
+
+MAP {
+  TABLE_TYPES: transactional | reference | log | config | junction | queue | archive | staging
+  COLUMN_TYPES: identifier | timestamp | amount | name | description | status | foreign_key | counter | flag | email | phone | address | url | json_data
+}
+
+BEHAVIOR ClassifySchema {
+  You are analyzing a database table to determine its purpose and the meaning of each column.
+
+  STEP 1 — Classify the table purpose.
+    Look at table name, column names, sample data, and foreign keys.
+    "orders" with amount + date + customer_id → transactional
+    "countries" with code + name → reference
+    "audit_log" with timestamp + action → log
+    "settings" with key + value → config
+
+  STEP 2 — Classify each column.
+    Determine what each column probably represents based on name, type, and sample values.
+    A column named "status" with values 1,2,3,4,5 → status enum
+    A column named "email" with @ signs → email
+    A column named "created_at" with timestamps → timestamp
+
+  STEP 3 — Detect enums.
+    If a column has fewer than 20 distinct values in the sample data, it's probably an enum.
+    Try to determine what each value means from context.
+
+  STEP 4 — Score confidence.
+    Table classification: based on how clearly the signals point to one purpose.
+    Column classification: based on naming clarity and sample data consistency.
+}
+
+CONSTRAINT {
+  MUST classify every column — no column left as "unknown" if ANY signal exists
+  MUST check sample_rows for enum detection, not just column names
+  MUST use TABLE_TYPES vocabulary for table purpose
+  MUST use COLUMN_TYPES vocabulary for column meanings
+  MUST flag columns with confidence below minConfidence
+}
+
+CHECKLIST {
+  [ ] table_purpose is from TABLE_TYPES map
+  [ ] every column has a probable_meaning
+  [ ] enum detection checked sample values
+  [ ] confidence scores provided for table and each column
+}
+
+FORMAT {
+  OUTPUT: {
+    "table_purpose": "<TABLE_TYPE>",
+    "confidence": <number>,
+    "columns": [
+      {
+        "name": "<column_name>",
+        "probable_meaning": "<COLUMN_TYPE or description>",
+        "confidence": <number>,
+        "is_enum": <boolean>,
+        "enum_values": [{ "value": "<val>", "probable_meaning": "<meaning>" }]
+      }
+    ]
+  }
+}
