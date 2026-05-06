@@ -10,6 +10,10 @@ export type { PatternLearner } from './pattern-learner.js';
 export { generateTools } from './tool-generator.js';
 export { queryByIntent } from './query-builder.js';
 
+// V2-002 Integration facade (T011 / T012 / T013 / T014 / T015):
+export { createIntegration, integrationFromAgentConfig } from './integration.js';
+export type { CreateIntegrationOptions } from './integration.js';
+
 // Connectors
 export { SQLiteConnector } from './connectors/sqlite.js';
 
@@ -30,4 +34,15 @@ export type {
   ForeignKeyRaw,
   ModelComplete,
   IntegrationAgentConfig,
+  // V2-002 surface:
+  ReachableSource,
+  SchemaDescriptor,
+  SchemaDescriptorField,
+  DiscoveryReport,
+  SafetyPolicy,
+  McpToolDefinition,
+  Integration,
+  EngineLike,
 } from './types.js';
+
+export { DEFAULT_SAFETY_POLICY } from './types.js';

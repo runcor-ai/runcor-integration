@@ -1,7 +1,7 @@
 {
   "name": "runcor-integration",
-  "version": "0.1.0",
-  "description": "Integration agent for the runcor AI runtime — bridges bespoke systems",
+  "version": "0.2.0",
+  "description": "Integration agent for the runcor AI runtime — bridges bespoke systems. v0.2.0 adds the V2-002 Integration facade (discoverSchemas + synthesizeTools + registerWithEngine via runcor v0.3.0+ in-process transport).",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,10 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "tsx tests/test-database.ts",
+    "test": "tsx tests/run-all.ts",
+    "test:database": "tsx tests/test-database.ts",
+    "test:register-with-engine": "tsx tests/test-register-with-engine.ts",
+    "test:safety-policy": "tsx tests/test-safety-policy.ts",
     "test:schema": "tsx --env-file=.env tests/test-schema-discovery.ts",
     "test:connector": "tsx tests/test-connectors.ts"
   },
